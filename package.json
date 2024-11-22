@@ -1,0 +1,15 @@
+{
+  "name": "pmcb-battery-voltage",
+  "version": "1.0.0",
+  "description": "Project PMCB Battery Voltage PT.PLN ULP Trenggalek berbasis IoT",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tailwindcss -i src/input.css -o dist/output.css --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ASNProject",
+  "license": "ISC",
+  "dependencies": {
+    "tailwindcss": "^3.4.15"
+  }
+}
