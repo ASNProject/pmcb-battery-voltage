@@ -25,14 +25,27 @@
     </head>
     <body class="bg-lightBlue justify-center min-h-screen p-2">
         <div class="flex items-center gap-2">
+            <!-- Header Content -->
             <img src="assets/images/pln.png" alt="" class="h-14">
             <div>
                 <h1 class="text-white font-bold">PT. PLN ULP</h1>
                 <h1 class="text-white font-bold">TRENGGALEK</h1>
             </div>
         </div>
-        <div class="flex h-screen items-center justify-center">
+        <!-- Login Content -->
+        <div class="flex flex-col h-screen items-center justify-center gap-2">
             <h1 class="font-bold text-white">LOGIN</h1>
+            <img src="assets/images/login2.png" alt="" class="h-40">
+            <div class="flex items-center mt-2 gap-2">
+                <h2 class="text-white">Username</h2>
+                <input type="text" placeholder="Masukkan username" class="p-1 rounded-sm">
+            </div>
+            <div class="flex items-center gap-3 mt-1 relative">
+                <h2 class="text-white">Password</h2>
+                <input type="password" placeholder="Masukkan password" class="p-1 rounded-sm">
+            </div>
+            <button class="mt-2 bg-gray-400 text-white rounded-sm hover:bg-yellow-400 p-2  w-32">
+                Login
+            </button>
         </div>
     </body> 
-</html>
