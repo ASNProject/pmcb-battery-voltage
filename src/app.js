@@ -79,6 +79,7 @@ async function logout() {
             window.location.href = 'login.html';
         } else {
             alert('Logout gagal!')
+            localStorage.removeItem('token');
         }
 
     } catch (error) {
