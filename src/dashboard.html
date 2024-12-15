@@ -14,9 +14,23 @@
  limitations under the License.
 -->
 
-## [Unreleased]
-### Add
-- Create base code HTML and Tailwind
-- Add UI Login user
-- Create HomeScreen
-- Implement Login and Logout
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/dist/output.css">
+    <title>Dashboard</title>
+</head>
+<body>
+    <div class="min-h-screen bg-gray-300">
+        <h1>Dashboard</h1>
+    </div>
+</body>
+<script src="app.js"></script>
+<script>
+    const token = localStorage.getItem('token');
+    if (!token) {window.location.href = 'login.html';
+        console.log('Token tidak ditemukan');} else {console.log(`Token ditemukan ${token}`);}
+</script>
+</html>

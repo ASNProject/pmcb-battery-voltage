@@ -9,3 +9,4 @@ https://github.com/ASNProject/pmcb-battery-voltage.git
 ```
 npm run dev
 ```
+- Open localhost:5500/src/index.html

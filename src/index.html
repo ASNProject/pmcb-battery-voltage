@@ -16,36 +16,84 @@
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="/dist/output.css">
-        <title>PMCB Battery Voltage</title>
-    </head>
-    <body class="bg-lightBlue justify-center min-h-screen p-2">
-        <div class="flex items-center gap-2">
-            <!-- Header Content -->
-            <img src="assets/images/pln.png" alt="" class="h-14">
-            <div>
-                <h1 class="text-white font-bold">PT. PLN ULP</h1>
-                <h1 class="text-white font-bold">TRENGGALEK</h1>
-            </div>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/dist/output.css">
+    <title>Document</title>
+</head>
+<body>
+    <!-- Container -->
+    <div class="mx-auto bg-blue-900">
+        <!-- Screen -->
+        <div class="min-h-screen flex flex-row">
+            <!-- Sidebar -->
+            <aside id="sidebar" class="bg-side-nav w-1/2 md:w-1/6 lg:q-1/6 border-r border-side-nav hidden md:block lg:bloc">
+                <header class="bg-header p-4 text-white font-extrabold mb-5 mt-5">
+                    <h1>BATTERY MONITORING</h1>
+                </header>
+                <ul class="list-reset flex flex-col">
+                    <li id="sidebar-dashboard" class="w-full py-3 px-2 border-b border-light-border bg-blue-900 text-white hover:bg-gray-500 hover:text-gray-200 transition duration-300" onclick="loadPage('dashboard', 'sidebar-dashboard')">
+                        <a href="javascript:void(0)">Dashboard</a>
+                    </li>
+                    <li id="sidebar-realtime" class="w-full py-3 px-2 border-b border-light-border bg-blue-900 text-white hover:bg-gray-500 hover:text-gray-200 transition duration-300" onclick="loadPage('realtime_voltage', 'sidebar-realtime')">
+                        <a href="javascript:void(0)">Realtime Voltage</a>
+                    </li>
+                    <li id="sidebar-report" class="w-full py-3 px-2 border-b border-light-border bg-blue-900 text-white hover:bg-gray-500 hover:text-gray-200 transition duration-300" onclick="loadPage('report', 'sidebar-report')">
+                        <a href="javascript:void(0)">Report</a>
+                    </li>
+                    
+                </ul>
+             </aside>
+
+             <div class="min-h-screen flex-1">
+                <!-- Header Section Starts Here -->
+                <header>
+                    <div class="flex justify-between p-4">
+                        <div class="flex items-center gap-2">
+                            <!-- Header Content -->
+                            <img src="assets/images/pln.png" alt="" class="h-14">
+                            <div>
+                                <h1 class="text-white font-bold">PT. PLN ULP</h1>
+                                <h1 class="text-white font-bold">TRENGGALEK</h1>
+                            </div>
+                        </div>
+                        <div class="p-1 flex flex-row items-center">
+                            <img onclick="" class="inline-block h-8 w-8 rounded-full" src="https://avatars0.githubusercontent.com/u/4323180?s=460&v=4" alt="">
+                            <a href="#" class="text-white p-2 no-underline hidden MD:block lg:block">Admin</a>
+                            <button onclick="dropdownAdmin()" id="dropdownMenuIconButton" data-dropdown-toggle="dropdownDots" class="inline-flex items-center p-2 text-sm font-medium text-center text-white" type="button">
+                                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 4 15">
+                                    <path d="M3.5 1.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 6.041a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm0 5.959a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z"/>
+                                </svg>
+                            </button>
+
+                            <!-- Dropdown menu -->
+                            <div id="dropdownDots" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600 absolute right-0">
+                                <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownMenuIconButton">
+                                    <li>
+                                        <a onclick="logout()" href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Keluar</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <!-- Header -->
+
+                <!-- Main Content -->
+                <div class="content">
+                    <!-- Konten akan dimuat di sini -->
+                </div>
+             </div>
         </div>
-        <!-- Login Content -->
-        <div class="flex flex-col h-screen items-center justify-center gap-2">
-            <h1 class="font-bold text-white">LOGIN</h1>
-            <img src="assets/images/login2.png" alt="" class="h-40">
-            <div class="flex items-center mt-2 gap-2">
-                <h2 class="text-white">Username</h2>
-                <input type="text" placeholder="Masukkan username" class="p-1 rounded-sm">
-            </div>
-            <div class="flex items-center gap-3 mt-1 relative">
-                <h2 class="text-white">Password</h2>
-                <input type="password" placeholder="Masukkan password" class="p-1 rounded-sm">
-            </div>
-            <button class="mt-2 bg-gray-400 text-white rounded-sm hover:bg-yellow-400 p-2  w-32">
-                Login
-            </button>
-        </div>
-    </body> 
+    </div>
+</body>
+<script src="app.js"></script>
+<script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = 'login.html';
+        console.log('Token tidak ditemukan');} else {console.log(`Token ditemukan ${token}`);
+        }
+</script>
+</html>
