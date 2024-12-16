@@ -20,7 +20,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/dist/output.css">
-    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Battery Monitoring</title>
 </head>
 <body>
     <!-- Container -->
@@ -33,16 +34,15 @@
                     <h1>BATTERY MONITORING</h1>
                 </header>
                 <ul class="list-reset flex flex-col">
-                    <li id="sidebar-dashboard" class="w-full py-3 px-2 border-b border-light-border bg-blue-900 text-white hover:bg-gray-500 hover:text-gray-200 transition duration-300" onclick="loadPage('dashboard', 'sidebar-dashboard')">
-                        <a href="javascript:void(0)">Dashboard</a>
+                    <li id="sidebar-dashboard" class="w-full py-3 px-2 border-b border-light-border bg-blue-900 text-white hover:bg-gray-500 hover:text-gray-200 transition duration-300" onclick="showContent('dashboard', this)">
+                        <a href="#">Dashboard</a>
                     </li>
-                    <li id="sidebar-realtime" class="w-full py-3 px-2 border-b border-light-border bg-blue-900 text-white hover:bg-gray-500 hover:text-gray-200 transition duration-300" onclick="loadPage('realtime_voltage', 'sidebar-realtime')">
-                        <a href="javascript:void(0)">Realtime Voltage</a>
+                    <li id="sidebar-realtime" class="w-full py-3 px-2 border-b border-light-border bg-blue-900 text-white hover:bg-gray-500 hover:text-gray-200 transition duration-300" onclick="showContent('realtime', this)">
+                        <a href="#">Realtime Voltage</a>
                     </li>
-                    <li id="sidebar-report" class="w-full py-3 px-2 border-b border-light-border bg-blue-900 text-white hover:bg-gray-500 hover:text-gray-200 transition duration-300" onclick="loadPage('report', 'sidebar-report')">
-                        <a href="javascript:void(0)">Report</a>
+                    <li id="sidebar-report" class="w-full py-3 px-2 border-b border-light-border bg-blue-900 text-white hover:bg-gray-500 hover:text-gray-200 transition duration-300" onclick="showContent('report', this)">
+                        <a href="#">Report</a>
                     </li>
-                    
                 </ul>
              </aside>
 
@@ -83,17 +83,42 @@
                 <!-- Main Content -->
                 <div class="content">
                     <!-- Konten akan dimuat di sini -->
+                      <!-- Konten Default: Dashboard -->
+                    <div id="dashboard" class="content-page">
+                        <div class="min-h-screen bg-gray-300 text-center p-6">
+                            <h1 class="text-2xl font-bold text-gray-800">PMCB BATTERY VOLTAGE</h1>
+                    
+                            <div class="container mx-auto mt-6">
+                                <div class="shadow rounded-lg">
+                                    <div class="relative flex flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
+                                        <div class="relative mx-4 mt-4 flex flex-col gap-4 overflow-hidden rounded-none bg-transparent bg-clip-border text-gray-700 shadow-none md:flex-row md:items-center">
+                                            <div class="pt-6 px-2 pb-0">
+                                                <canvas id="chart" class="w-full h-screen"></canvas>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Konten Realtime Voltage -->
+                    <div id="realtime" class="content-page hidden">
+                        <div class="min-h-screen bg-gray-300 text-center p-6">
+                            <h1 class="text-2xl font-bold text-gray-800">REALTIME TABLE</h1>
+                        </div>
+                    </div>
+
+                    <!-- Konten Report -->
+                    <div id="report" class="content-page hidden">
+                        <div class="min-h-screen bg-gray-300 text-center p-6">
+                            <h1 class="text-2xl font-bold text-gray-800">REPORT</h1>
+                        </div>
+                    </div>
                 </div>
              </div>
         </div>
     </div>
 </body>
 <script src="app.js"></script>
-<script>
-    const token = localStorage.getItem('token');
-    if (!token) {
-        window.location.href = 'login.html';
-        console.log('Token tidak ditemukan');} else {console.log(`Token ditemukan ${token}`);
-        }
-</script>
 </html>

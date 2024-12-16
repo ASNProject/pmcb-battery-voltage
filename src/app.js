@@ -61,9 +61,7 @@ async function login() {
 }
 
 // Fungsi untuk logout
-async function logout() {
-    const token = localStorage.getItem('token');
-    
+async function logout() {    
     try {
         const response = await fetch('http://127.0.0.1:8000/api/logout',  {
             method: 'POST',
@@ -78,8 +76,9 @@ async function logout() {
             localStorage.removeItem('token');
             window.location.href = 'login.html';
         } else {
-            alert('Logout gagal!')
+            // alert('Logout gagal!')
             localStorage.removeItem('token');
+            window.location.href = 'login.html';
         }
 
     } catch (error) {
@@ -93,29 +92,28 @@ function dropdownAdmin() {
     dropdown.classList.toggle('hidden');
 }
 
-// Fungsi untuk memuat konten
-function loadPage(page, activeSidebarId) {
-    // Muat konten ke div .content
-    fetch(`${page}.html`)
-        .then(response => response.text())
-        .then(html => {
-            document.querySelector('.content').innerHTML = html;
-
-            // Tandai sidebar yang aktif
-            document.querySelectorAll('#sidebar li').forEach(item => {
-                item.classList.remove('bg-gray-500'); // Hilangkan tanda aktif
-            });
-            if (activeSidebarId) {
-                document.getElementById(activeSidebarId).classList.add('bg-gray-500'); // Tandai yang aktif
-            }
-        })
-    .catch(error => console.error('Error loading page:', error));
+// Menampilkan konten yang dipilih
+function showContent(contentId, element) {
+    // Menyembunyikan semua konten
+    const contentPages = document.querySelectorAll('.content-page');
+    contentPages.forEach(page => page.classList.add('hidden'));
+        
+    // Menampilkan konten yang dipilih
+    const selectedContent = document.getElementById(contentId);
+    if (selectedContent) {
+        selectedContent.classList.remove('hidden');
+    }
+    // Mengatur style hover pada elemen sidebar yang dipilih
+    const sidebarItems = document.querySelectorAll('#sidebar li');
+    sidebarItems.forEach(item => item.classList.remove('bg-gray-500', 'text-gray-200'));
+    element.classList.add('bg-gray-500', 'text-gray-200'); // Menambahkan hover aktif
 }
 
-// Saat halaman pertama kali terbuka, muat konten dashboard
-document.addEventListener('DOMContentLoaded', () => {
-    loadPage('dashboard', 'sidebar-dashboard');
-});
+// Menampilkan Dashboard secara default saat halaman pertama kali dibuka
+window.onload = function() {
+    const defaultItem = document.getElementById('sidebar-dashboard');
+    showContent('dashboard', defaultItem);
+};
 
 // Close dropdown when clicking outside of it
 document.addEventListener('click', function (e) {
@@ -127,3 +125,97 @@ document.addEventListener('click', function (e) {
         dropdown.classList.add('hidden');
     }
 });
+
+const token = localStorage.getItem('token');
+if (!token) {
+    window.location.href = 'login.html';
+    console.log('Token tidak ditemukan');} else {console.log(`Token ditemukan ${token}`);
+    }
+
+// Konfigurasi awal Chart.js
+const ctx = document.getElementById('chart').getContext('2d');
+
+// Inisialisasi Chart.js
+const realtimeChart = new Chart(ctx, {
+type: 'line',
+data: {
+    labels: [], // Label untuk sumbu X (waktu atau data lainnya)
+    datasets: [{
+    label: 'Realtime Data',
+    data: [], // Data awal
+    borderColor: 'rgba(59, 130, 246, 1)', // Tailwind Blue-500
+    backgroundColor: 'rgba(59, 130, 246, 0.2)', // Tailwind Blue-500 (transparan)
+    borderWidth: 2,
+    tension: 0.4 // Membuat garis lebih mulus
+    }]
+},
+options: {
+    responsive: true,
+    plugins: {
+    legend: {
+        display: true,
+        labels: {
+        color: '#4B5563' // Tailwind Gray-600
+        }
+    }
+    },
+    scales: {
+    x: {
+        title: {
+        display: true,
+        text: 'Time',
+        color: '#374151', // Tailwind Gray-700
+        font: { weight: 'bold' }
+        },
+        ticks: { color: '#6B7280' } // Tailwind Gray-500
+    },
+    y: {
+        title: {
+        display: true,
+        text: 'Voltage',
+        color: '#374151', // Tailwind Gray-700
+        font: { weight: 'bold' }
+        },
+        beginAtZero: true,
+        ticks: { color: '#6B7280' } // Tailwind Gray-500
+    }
+    }
+}
+});
+
+// Fungsi untuk fetch data dari API
+async function fetchData() {
+    try {
+        const response = await fetch('http://127.0.0.1:8000/api/voltage'); // Ganti dengan URL API Anda
+        const result = await response.json();
+    
+        // Pastikan data ada dan merupakan array
+        if (Array.isArray(result.data) && result.data.length > 0) {
+            result.data.forEach(data => {
+                // Cek apakah data sudah ada berdasarkan 'time' di chart
+                const isDataExist = realtimeChart.data.labels.some(label => label === data.time);
+    
+                if (!isDataExist) { // Jika data dengan 'time' yang sama belum ada
+                    // Tambahkan data baru ke chart
+                    realtimeChart.data.labels.push(data.time);
+                    realtimeChart.data.datasets[0].data.push(data.voltage);
+    
+                    // Jika jumlah data di chart melebihi batas, hapus data lama
+                    if (realtimeChart.data.labels.length > 20) {
+                        realtimeChart.data.labels.push(); // Hapus label pertama
+                        realtimeChart.data.datasets[0].data.push(); // Hapus data pertama
+                    }
+    
+                    // Update chart setelah data baru ditambahkan
+                    realtimeChart.update();
+                }
+            });
+        }
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}  
+// Panggil fetchData setiap 5 detik
+setInterval(fetchData, 5000);
+
+
