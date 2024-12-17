@@ -20,3 +20,4 @@
 - Add UI Login user
 - Create HomeScreen
 - Implement Login and Logout
+- Implement chart, table and statistic
