@@ -21,6 +21,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/dist/output.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Tailwind CSS CDN -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+
+    <!-- flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    
+    <!-- flatpickr JS -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <title>Battery Monitoring</title>
 </head>
 <body>
@@ -87,13 +95,12 @@
                     <div id="dashboard" class="content-page">
                         <div class="min-h-screen bg-gray-300 text-center p-6">
                             <h1 class="text-2xl font-bold text-gray-800">PMCB BATTERY VOLTAGE</h1>
-                    
                             <div class="container mx-auto mt-6">
                                 <div class="shadow rounded-lg">
                                     <div class="relative flex flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
                                         <div class="relative mx-4 mt-4 flex flex-col gap-4 overflow-hidden rounded-none bg-transparent bg-clip-border text-gray-700 shadow-none md:flex-row md:items-center">
                                             <div class="pt-6 px-2 pb-0">
-                                                <canvas id="chart" class="w-full h-screen"></canvas>
+                                                <canvas id="chart" class="w-full h-screen" style="width: 1000%;"></canvas>
                                             </div>
                                         </div>
                                     </div>
@@ -106,6 +113,20 @@
                     <div id="realtime" class="content-page hidden">
                         <div class="min-h-screen bg-gray-300 text-center p-6">
                             <h1 class="text-2xl font-bold text-gray-800">REALTIME TABLE</h1>
+                            <div class="container mx-auto">
+                                <table class="table-auto w-full border-collapse border-gray-300 bg-white shadow-md rounded-lg mt-6">
+                                    <thead>
+                                        <tr class="bg-gray-200">
+                                            <th class="border border-gray-300 px-4 py-2">No</th>
+                                            <th class="border border-gray-300 px-4 py-2">Time</th>
+                                            <th class="border border-gray-300 px-4 py-2">Voltage (V)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="table-body">
+                                        <!-- Data will be dynamically added here -->
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
 
@@ -113,6 +134,10 @@
                     <div id="report" class="content-page hidden">
                         <div class="min-h-screen bg-gray-300 text-center p-6">
                             <h1 class="text-2xl font-bold text-gray-800">REPORT</h1>
+                            <div class="container flex flex-row items-center mx-auto p-4">
+                                <label for="datetime" class="block text-gray-700 text-sm font-bold mr-4">Date</label>
+                                <input id="datetime" type="text" class="w-56 p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -121,4 +146,11 @@
     </div>
 </body>
 <script src="app.js"></script>
+<script>
+    const token = localStorage.getItem('token');
+    if (!token) {
+        window.location.href = 'login.html';
+        console.log('Token tidak ditemukan');} else {console.log(`Token ditemukan ${token}`);
+    }
+</script>
 </html>
