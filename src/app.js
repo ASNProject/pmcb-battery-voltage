@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// URL dasar API
+const baseUrl = 'http://127.0.0.1:8000/api/voltage';
+
 // Fungsi untuk memetiksa token
 function checkAuthentication() {
     const token = localStorage.getItem('token');
@@ -181,11 +184,12 @@ options: {
 });
 
 let rowCount = 1;
+const MAX_DATA = 100;
 
 // Fungsi untuk fetch data dari API
 async function fetchData() {
     try {
-        const response = await fetch('http://127.0.0.1:8000/api/voltage'); // Ganti dengan URL API Anda
+        const response = await fetch(`${baseUrl}`); // Ganti dengan URL API Anda
         const result = await response.json();
     
         // Untuk data Chart
@@ -201,9 +205,9 @@ async function fetchData() {
                     realtimeChart.data.datasets[0].data.push(data.voltage);
     
                     // Jika jumlah data di chart melebihi batas, hapus data lama
-                    if (realtimeChart.data.labels.length > 20) {
-                        realtimeChart.data.labels.push(); // Hapus label pertama
-                        realtimeChart.data.datasets[0].data.push(); // Hapus data pertama
+                    if (realtimeChart.data.labels.length > MAX_DATA) {
+                        realtimeChart.data.labels.shift(); // Hapus label pertama
+                        realtimeChart.data.datasets[0].data.shift(); // Hapus data pertama
                     }
     
                     // Update chart setelah data baru ditambahkan
@@ -226,7 +230,7 @@ async function fetchData() {
                     row.className = "hover:bg-gray-100";
     
                     row.innerHTML = `
-                        <td class="border border-gray-300 px-4 py-2 text-center">${rowCount}</td>
+                        <td class="border border-gray-300 px-4 py-2 text-center">${data.id}</td>
                         <td class="border border-gray-300 px-4 py-2 text-center">${data.time}</td>
                         <td class="border border-gray-300 px-4 py-2 text-center">${data.voltage}</td>
                     `;
@@ -235,8 +239,8 @@ async function fetchData() {
     
                     rowCount++;
     
-                    if (tableBody.children.length > 20) {
-                        tableBody.removeChild(tableBody.firstElementChild);
+                    if (tableBody.children.length > MAX_DATA) {
+                        tableBody.removeChild(tableBody.lastElementChild);
                     }
                 }
             });
@@ -252,6 +256,72 @@ setInterval(fetchData, 5000);
 flatpickr("#datetime", {
     enableTime: true,  // Enable time selection
     dateFormat: "Y-m-d",  // Set the format for date and time
+});
+
+async function fetchMaxData(date) {
+    try {
+        // Query parameter yang ingin dikirim
+        const queryParams = new URLSearchParams({
+           date, // Ganti dengan tanggal yang ingin difilter
+        });
+
+        // Susun URL lengkap dengan parameter
+        const urlWithParams = `${baseUrl}?${queryParams.toString()}`;
+
+        // Lakukan fetch request
+        const response = await fetch(urlWithParams);
+
+        // Parse hasilnya menjadi JSON
+        const result = await response.json();
+
+        // Menampilkan data
+        if (result.data && Array.isArray(result.data)) {
+            console.table(result.data);
+
+            const { average, max, min } = calculateStatistic(result.data);
+            // Tampilkan hasil statistik di console
+            console.log(`Rata-rata Voltage: ${average.toFixed(2)}`);
+            console.log(`Max Voltage: ${max}`);
+            console.log(`Min Voltage: ${min}`);
+
+            // Menampilkan hasil di Web
+            document.getElementById("average").innerText = average;
+            document.getElementById("max").innerText = max;
+            document.getElementById("min").innerText = min;
+
+        }
+
+    } catch (error) {
+        console.error('Error fetching data: ', error);
+    }
+}
+
+// Fungsi menghitung statistic data voltage
+function calculateStatistic(data) {
+    const voltages = data.map(item => parseFloat(item.voltage));
+
+    // Menghitung total voltage
+    const total = voltages.reduce((acc, val) => acc + val, 0);
+    // Menghitung rata-rata voltage
+    const average = total / voltages.length;
+    // Menghitung max voltage
+    const max = Math.max(...voltages);
+    // Menghitung min voltage
+    const min = Math.min(...voltages);
+
+    return { average, max, min };
+}
+
+// Event listener pada tombol fetch
+document.getElementById("fetchButton").addEventListener("click", () => {
+    const selectedDate = document.getElementById("datetime").value;
+
+    if (selectedDate) {
+        fetchMaxData(selectedDate); // Panggil fungsi fetch dengan date dari date picker
+    } else {
+        console.error("Pilih tanggal terlebih dahulu!");
+        alert('Pilih tanggal telebih dahulu!');
+    }
 });
 
 
